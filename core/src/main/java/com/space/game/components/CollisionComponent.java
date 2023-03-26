@@ -1,78 +1,82 @@
 package com.space.game.components;
 
-import com.badlogic.gdx.math.Circle;
-import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Shape2D;
 import com.badlogic.gdx.math.Vector2;
-import com.space.game.core.Component;
-
+import com.space.game.components.external.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
+public class CollisionComponent<T extends Shape2D> implements Component {
 
-public class CollisionComponent extends Component {
+    private T shape2D;
 
-    private Rectangle rect = null;
-    private Circle circle = null;
-    private boolean collided = false;
-    private int offset = 0;
-    private List<String> collisionList = new ArrayList<>();
-    private final Vector2 position = new Vector2(0,0);
+    private boolean isEnabled;
+    private boolean hasCollided;
+    private int hitBoxOffset = 0;
+    private List<String> collisionList;
+    private Vector2 position;
+
+
+    public CollisionComponent(T shape2D) {
+        this.shape2D = shape2D;
+        isEnabled = true;
+        hasCollided = false;
+        hitBoxOffset = 0;
+        collisionList = new ArrayList<>();
+        position = new Vector2(0, 0);
+    }
+
+    public void setShape(T shape2D) {
+        this.shape2D = shape2D;
+    }
+
+    public T getShape() {
+        return shape2D;
+    }
+
 
     @Override
     public void update(float dt) {
     }
 
-    public void setShapeCircle(Circle circle){
-        this.circle = circle;
-        this.position.x = circle.x;
-        this.rect = null;
+    @Override
+    public boolean isEnabled(final boolean enable) {
+        return isEnabled;
     }
 
-    public void setShapeRect(Rectangle rect){
-        this.rect  = rect;
-        this.position.x = rect.x;
-        this.position.y = rect.y;
-        this.circle = null;
+
+    public void setHasCollided(boolean hasCollided) {
+        this.hasCollided = hasCollided;
     }
 
-    public Rectangle getRect(){
-        return this.rect;
+    public boolean getHasCollided() {
+        return this.hasCollided;
     }
 
-    public Circle getCircle(){
-        return this.circle;
-    }
-    public void setCollided(boolean collided){
-        this.collided = collided;
-    }
-    public boolean getCollided(){
-        return this.collided;
-    }
-
-    public void addToCollisionList(String name){
+    public void addToCollisionList(String name) {
         collisionList.add(name);
     }
 
-    public boolean isInCollisionList(String name){
-        for (String collisionName: collisionList) {
-            if(collisionName.equals(name))
+    public boolean isInCollisionList(String name) {
+        for (String collisionName : collisionList) {
+            if (collisionName.equals(name))
                 return true;
         }
         return false;
     }
 
-    public void clearCollisionList(){
+    public void clearCollisionList() {
         collisionList = new ArrayList<>();
     }
 
-    public int getOffset() {
-        return offset;
+    public int getHitBoxOffset() {
+        return hitBoxOffset;
     }
 
-    public void setOffset(int offset) {
-        this.offset = offset;
+    public void setHitBoxOffset(int hitBoxOffset) {
+        this.hitBoxOffset = hitBoxOffset;
     }
 
     public Vector2 getPosition() {
@@ -80,7 +84,9 @@ public class CollisionComponent extends Component {
     }
 
     public void setPosition(Vector2 position) {
-        this.position.x = position.x + offset;
-        this.position.y = position.y + offset;
+        this.position.x = position.x + hitBoxOffset;
+        this.position.y = position.y + hitBoxOffset;
     }
+
+
 }

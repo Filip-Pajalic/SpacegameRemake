@@ -5,7 +5,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.space.game.components.*;
-import com.space.game.core.Entity;
 
 public class ShipEntity extends Entity {
 
@@ -35,12 +34,11 @@ public class ShipEntity extends Entity {
         addInputComponents();
 
         //Collision
-        addComponent(new CollisionComponent());
-        getComponent(CollisionComponent.class).setShapeRect(new Rectangle(spawnPosition.x
+        addComponent(new CollisionComponent<Rectangle>(new Rectangle(spawnPosition.x
             , spawnPosition.y,
             32,
-            32));
-        getComponent(CollisionComponent.class).setOffset(offsetHitbox);
+            32)));
+        getComponent(CollisionComponent.class).setHitBoxOffset(offsetHitbox);
 
         //Score
         addComponent(new ScoreComponent());

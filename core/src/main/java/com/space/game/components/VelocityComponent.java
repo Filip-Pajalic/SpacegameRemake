@@ -1,22 +1,21 @@
 package com.space.game.components;
 
 import com.badlogic.gdx.math.Vector2;
+import com.space.game.components.external.Component;
 
-import com.space.game.core.Component;
+public class VelocityComponent implements Component {
 
-public class VelocityComponent extends Component {
-
-    private Vector2 velocity = new Vector2(0f,0f);
-    private Vector2 acceleration = new Vector2(0f,0f);
-    private Vector2 accelerationChange = new Vector2(0f,0f);
-    private Vector2 activeAcceleration = new Vector2(0f,0f);
+    private Vector2 velocity = new Vector2(0f, 0f);
+    private Vector2 acceleration = new Vector2(0f, 0f);
+    private Vector2 accelerationChange = new Vector2(0f, 0f);
+    private Vector2 activeAcceleration = new Vector2(0f, 0f);
 
     @Override
     public void update(float dt) {
 
     }
 
-    public void start(){
+    public void start() {
 
     }
 
@@ -35,6 +34,7 @@ public class VelocityComponent extends Component {
     public void setAccelerationChangeX(float velocityX) {
         this.accelerationChange.x = velocityX;
     }
+
     public void setAccelerationChangeY(float velocityY) {
         this.accelerationChange.y = velocityY;
     }
@@ -54,6 +54,11 @@ public class VelocityComponent extends Component {
 
     public Vector2 getActiveAcceleration() {
         return activeAcceleration;
+    }
+
+    @Override
+    public boolean isEnabled(final boolean enable) {
+        return true;
     }
 
 }

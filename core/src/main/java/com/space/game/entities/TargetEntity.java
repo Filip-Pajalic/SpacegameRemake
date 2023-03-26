@@ -1,28 +1,12 @@
 package com.space.game.entities;
 
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-
-
-import java.util.UUID;
-
 import com.space.Constants;
-import com.space.game.components.CollisionComponent;
-import com.space.game.components.GraphicsCompoment;
-
-import com.space.game.components.HealthComponent;
-import com.space.game.components.ParticleComponent;
-import com.space.game.components.PositionComponent;
-
-import com.space.game.components.PowerComponent;
-import com.space.game.core.Entity;
+import com.space.game.components.*;
 
 public class TargetEntity extends Entity {
     private Vector2 spawnPosition;
@@ -35,7 +19,7 @@ public class TargetEntity extends Entity {
     public TargetEntity(String name) {
         super(name);
         addComponent(new PositionComponent());
-        addComponent(new CollisionComponent());
+        addComponent(new CollisionComponent(new Circle(0, 0, 0)));
         addComponent(new HealthComponent());
         //Power
         addComponent(new PowerComponent());
@@ -44,32 +28,29 @@ public class TargetEntity extends Entity {
         addComponent(new ParticleComponent());
 
 
-
         randomizeProperties();
         getComponent(PowerComponent.class).setPower("Explosion", false);
 
         addComponent(new GraphicsCompoment());
 
-        getComponent(GraphicsCompoment.class).setFilled(new Color(1,0,0,0.1f));
-        getComponent(GraphicsCompoment.class).setColor(new Color(1,0,0,1));
-
-
+        getComponent(GraphicsCompoment.class).setFilled(new Color(1, 0, 0, 0.1f));
+        getComponent(GraphicsCompoment.class).setColor(new Color(1, 0, 0, 1));
 
 
     }
 
-    public void randomizeProperties(){
-        if(!getComponent(ParticleComponent.class).getParticleEffectList().isEmpty()) {
+    public void randomizeProperties() {
+        if (!getComponent(ParticleComponent.class).getParticleEffectList().isEmpty()) {
             getComponent(ParticleComponent.class).getParticleEffectList().get(getComponent(ParticleComponent.class).getParticleEffectList().size() - 1).start();
         }
         getComponent(PowerComponent.class).setPower("Explosion", true);
         //getComponent(PowerComponent.class).setPowerTimer("Explosion", explosionTimer);
-        this.health = MathUtils.random(20,50);
+        this.health = MathUtils.random(20, 50);
         this.oldradius = radius;
         setRadius();
-        this.spawnPosition =  randomizePosition();
+        this.spawnPosition = randomizePosition();
         getComponent(PositionComponent.class).setPosition(spawnPosition);
-        getComponent(CollisionComponent.class).setShapeCircle(new Circle(spawnPosition.x,spawnPosition.y,radiusHitbox));
+        getComponent(CollisionComponent.class).setShape(new Circle(spawnPosition.x, spawnPosition.y, radiusHitbox));
         getComponent(HealthComponent.class).setHealth(this.health);
         getComponent(PositionComponent.class).setLastPosition(spawnPosition);
         //getComponent(ParticleComponent.class).addEffect(Gdx.files.internal("targetparticle.p"), Gdx.files.internal(""));
@@ -78,12 +59,12 @@ public class TargetEntity extends Entity {
 
     }
 
-    public Vector2 randomizePosition(){
+    public Vector2 randomizePosition() {
         Vector2 lastPosition = getComponent(PositionComponent.class).getLastPosition();
-        Vector2 tempPosition = new Vector2(lastPosition.x,lastPosition.y);
-        while (CollideCircles(lastPosition,tempPosition,radius,oldradius)){
-            tempPosition.x = MathUtils.random(10+this.radius, Constants.WORLD_WIDTH-10-this.radius);
-            tempPosition.y = MathUtils.random(30+this.radius, Constants.WORLD_HEIGHT-50-this.radius);
+        Vector2 tempPosition = new Vector2(lastPosition.x, lastPosition.y);
+        while (CollideCircles(lastPosition, tempPosition, radius, oldradius)) {
+            tempPosition.x = MathUtils.random(10 + this.radius, Constants.WORLD_WIDTH - 10 - this.radius);
+            tempPosition.y = MathUtils.random(30 + this.radius, Constants.WORLD_HEIGHT - 50 - this.radius);
         }
         return tempPosition;
     }
@@ -97,10 +78,10 @@ public class TargetEntity extends Entity {
         return centerDistanceSq <= radiusSq;
     }
 
-    public void setRadius(){
+    public void setRadius() {
         //ensure radius is only updated here and not other place in code.
-        this.radius = this.health+10;
-        this.radiusHitbox = this.health+15;
+        this.radius = this.health + 10;
+        this.radiusHitbox = this.health + 15;
     }
 
 

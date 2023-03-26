@@ -2,43 +2,27 @@ package com.space.gui;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
-
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.Viewport;
-
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import com.space.Constants;
 import com.space.event.core.Event;
 import com.space.event.core.Observer;
-import com.space.event.events.HealthEvent;
-import com.space.game.components.GraphicsCompoment;
-import com.space.game.components.HealthComponent;
 import com.space.game.components.PositionComponent;
-import com.space.game.components.VelocityComponent;
-import com.space.game.core.Entity;
+import com.space.game.entities.Entity;
 
 public class GameUi implements Observer {
 
     Skin skin;
     Stage stage;
-    Label fpsLabel,accelerationLabel,velocityLabel,positionLabel, collisionLabel, scoreLabel;
+    Label fpsLabel, accelerationLabel, velocityLabel, positionLabel, collisionLabel, scoreLabel;
     Label healthLabel;
     Table debugTable;
     Table healthTable;
@@ -55,7 +39,7 @@ public class GameUi implements Observer {
     public GameUi(int width, int height) {
         this.healthTable = new Table();
         this.persistentTable = new Table();
-        this.healthTable.setPosition(Constants.WORLD_WIDTH,Constants.WORLD_HEIGHT);
+        this.healthTable.setPosition(Constants.WORLD_WIDTH, Constants.WORLD_HEIGHT);
         this.stage = new Stage();
         this.skin = new Skin();
         this.width = width;
@@ -63,19 +47,19 @@ public class GameUi implements Observer {
         createUi();
     }
 
-    public void setViewPort(Viewport viewport){
+    public void setViewPort(Viewport viewport) {
         this.stage.setViewport(viewport);
     }
 
-    private void createUi(){
+    private void createUi() {
         this.skin = new Skin(Gdx.files.internal("assets/uiskin.json"));
         scoreLabel = new Label("0", this.skin);
-        persistentTable.setPosition(Constants.WORLD_WIDTH/2,Constants.WORLD_HEIGHT-30);
+        persistentTable.setPosition(Constants.WORLD_WIDTH / 2, Constants.WORLD_HEIGHT - 30);
         persistentTable.add(scoreLabel);
-        this.healthLabel = new Label("0",this.skin);
+        this.healthLabel = new Label("0", this.skin);
         this.healthTable.add(healthLabel);
         Gdx.input.setInputProcessor(stage);
-        if(Constants.DEBUGUITEXT) {
+        if (Constants.DEBUGUITEXT) {
             createDebugUi();
             stage.addActor(debugTable);
 
@@ -84,8 +68,9 @@ public class GameUi implements Observer {
         stage.addActor(healthTable);
         stage.setDebugAll(Constants.DEBUGUI);
     }
-    public void createDebugUi(){
-        Pixmap bgPixmap = new Pixmap(1,1, Pixmap.Format.RGB565);
+
+    public void createDebugUi() {
+        Pixmap bgPixmap = new Pixmap(1, 1, Pixmap.Format.RGB565);
         bgPixmap.setColor(Color.RED);
         bgPixmap.fill();
         TextureRegionDrawable textureRegionDrawableBg = new TextureRegionDrawable(new TextureRegion(new Texture(bgPixmap)));
@@ -94,7 +79,7 @@ public class GameUi implements Observer {
         velocityLabel = new Label("velocity:", this.skin);
         positionLabel = new Label("position:", this.skin);
         collisionLabel = new Label("", this.skin);
-        collisionLabel.setPosition(100,100);
+        collisionLabel.setPosition(100, 100);
 
         debugTable = new Table();
         debugTable.add(fpsLabel).width(100).row();
@@ -102,15 +87,15 @@ public class GameUi implements Observer {
         debugTable.add(velocityLabel).width(100).row();
         debugTable.add(positionLabel).width(100).row();
         debugTable.add(collisionLabel).width(100).row();
-        debugTable.setPosition(this.width/2.0f, height-100);
+        debugTable.setPosition(this.width / 2.0f, height - 100);
         debugTable.setBackground(textureRegionDrawableBg);
     }
 
-    public void update(float dt){
+    public void update(float dt) {
 
         drawHealthLabel();
         updateScore(dt);
-        timer+=dt;
+        timer += dt;
         if (timer >= 0.05) {
             timer -= 0.05f;
             updateDebug(dt);
@@ -120,12 +105,12 @@ public class GameUi implements Observer {
 
     }
 
-    private void drawHealthLabel(){
+    private void drawHealthLabel() {
         healthLabel.setText(this.health);
     }
 
-    public void updateDebug(float dt){
-        if(Constants.DEBUGUITEXT) {
+    public void updateDebug(float dt) {
+        if (Constants.DEBUGUITEXT) {
             fpsLabel.setText("fps: " + Gdx.graphics.getFramesPerSecond());
             positionLabel.setText(this.position);
             velocityLabel.setText(this.velocity);
@@ -134,21 +119,20 @@ public class GameUi implements Observer {
         }
     }
 
-    public void updateScore(float dt){
+    public void updateScore(float dt) {
 
-        scoreLabel.setText("Score \n"+this.score);
+        scoreLabel.setText("Score \n" + this.score);
         scoreLabel.setAlignment(Align.center);
 
     }
 
-    public Stage getStage(){
+    public Stage getStage() {
         return this.stage;
     }
 
     @Override
     public void onNotify(Entity entity, Event event) {
-        switch (event.getEventType())
-        {
+        switch (event.getEventType()) {
             case DEBUG_ACCELERATION:
                 acceleration = event.message;
                 break;
@@ -167,8 +151,8 @@ public class GameUi implements Observer {
             case HEALTH_EVENT:
                 this.health = event.message;
                 int textwidth = 1;
-                healthTable.setPosition(entity.getComponent(PositionComponent.class).getPosition().x-textwidth,
-                        entity.getComponent(PositionComponent.class).getPosition().y);
+                healthTable.setPosition(entity.getComponent(PositionComponent.class).getPosition().x - textwidth,
+                    entity.getComponent(PositionComponent.class).getPosition().y);
                 break;
         }
     }

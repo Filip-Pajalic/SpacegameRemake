@@ -1,14 +1,14 @@
 package com.space.event.observers;
+
 import com.space.event.core.Event;
 import com.space.event.core.Observer;
-import com.space.game.core.Entity;
+import com.space.game.entities.Entity;
 
 public class DebugObserver implements Observer {
 
     @Override
     public void onNotify(Entity entity, Event event) {
-        switch (event.getEventType())
-        {
+        switch (event.getEventType()) {
             case DEBUG_TEXT:
                 debugMessage(event);
                 break;
@@ -21,8 +21,8 @@ public class DebugObserver implements Observer {
                 debugMessage(event);
         }
     }
-    private void debugMessage(Event event)
-    {
+
+    private void debugMessage(Event event) {
         System.out.printf("event: %s", event.getMessage());
     }
 }

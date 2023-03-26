@@ -1,10 +1,9 @@
 package com.space.game.components;
 
 
-import com.space.game.core.Component;
+import com.space.game.components.external.Component;
 
-
-public class HealthComponent extends Component {
+public class HealthComponent implements Component {
 
     public int health = 0;
 
@@ -13,17 +12,21 @@ public class HealthComponent extends Component {
 
     }
 
-    public void setHealth(int health){
+    @Override
+    public boolean isEnabled(final boolean enable) {
+        return true;
+    }
+
+    public void setHealth(int health) {
 
         this.health = health;
 
     }
 
-    public void removeHealth(int health){
-        if (this.health - health <=0){
+    public void removeHealth(int health) {
+        if (this.health - health <= 0) {
             this.health = 0;
-        }
-        else
+        } else
             this.health -= health;
     }
 

@@ -1,5 +1,6 @@
 package com.space.game.systems;
 
+import com.badlogic.gdx.math.Circle;
 import com.space.event.core.Event;
 import com.space.event.core.EventTypes;
 import com.space.event.core.Observer;
@@ -11,8 +12,7 @@ import com.space.game.components.CollisionComponent;
 import com.space.game.components.GraphicsCompoment;
 import com.space.game.components.HealthComponent;
 import com.space.game.components.ScoreComponent;
-import com.space.game.core.Entity;
-import com.space.game.core.GameSystem;
+import com.space.game.entities.Entity;
 import com.space.game.entities.ShipEntity;
 import com.space.game.entities.TargetEntity;
 
@@ -58,7 +58,7 @@ public class ScoringSystem extends GameSystem {
         /*circle radius not being updated after score 0 properly*/
         int health = targetEntity.getComponent(HealthComponent.class).getHealth();
         updateHealth(targetEntity, health);
-        if (targetEntity.getComponent(CollisionComponent.class).getCollided()) {
+        if (targetEntity.getComponent(CollisionComponent.class).getHasCollided()) {
             timer += dt;
             if (timer >= 0.05) {
                 timer -= 0.05f;
@@ -71,7 +71,7 @@ public class ScoringSystem extends GameSystem {
             targetEntity.randomizeProperties();
         } else {
             targetEntity.getComponent(GraphicsCompoment.class).setSizeX(health + 15);
-            targetEntity.getComponent(CollisionComponent.class).getCircle().setRadius(health + 5);
+            targetEntity.getComponent(CollisionComponent.class).setShape(new Circle(20, 20, health + 5));
         }
 
 

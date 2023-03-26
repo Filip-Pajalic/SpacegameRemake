@@ -2,20 +2,15 @@ package com.space.game.components;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.space.game.core.Component;
+import com.badlogic.gdx.math.Shape2D;
+import com.space.game.components.external.Component;
 
 
-public class GraphicsCompoment extends Component {
+public class GraphicsCompoment implements Component {
 
-    public enum Shapes{
-        CIRCLE,
-        RECANGLE,
-        OTHER
-    }
 
     private Texture texture = null;
-    private Shapes shape = null;
+    private Shape2D shape = null;
     private Color color = null;
 
     private int sizeX = 0; //radius
@@ -24,9 +19,21 @@ public class GraphicsCompoment extends Component {
     private boolean filled = false;
     private Color filledColor = null;
 
+    public GraphicsCompoment(Texture texture, int sizeX, int sizeY) {
+        this.texture = texture;
+        this.sizeX = sizeX;
+        this.sizeY = sizeY;
+
+    }
+
     @Override
     public void update(float dt) {
 
+    }
+
+    @Override
+    public boolean isEnabled(final boolean enable) {
+        return true;
     }
 
     public Texture getTexture() {
@@ -53,11 +60,11 @@ public class GraphicsCompoment extends Component {
         this.sizeY = sizeY;
     }
 
-    public void setShape(Shapes shape){
+    public void setShape(Shape2D shape) {
         this.shape = shape;
     }
 
-    public Shapes getShape(){
+    public Shape2D getShape() {
         return shape;
 
     }
@@ -70,12 +77,12 @@ public class GraphicsCompoment extends Component {
         this.color = color;
     }
 
-    public void setFilled(Color color){
+    public void setFilled(Color color) {
         filled = true;
         filledColor = color;
     }
 
-    public Color getFilledColor(){
+    public Color getFilledColor() {
         return this.filledColor;
     }
 

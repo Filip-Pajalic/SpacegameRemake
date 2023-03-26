@@ -2,22 +2,19 @@ package com.space;
 
 
 import com.badlogic.gdx.Screen;
-
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.math.Circle;
 import com.space.event.core.Observer;
 import com.space.event.observers.DebugObserver;
 import com.space.game.components.GraphicsCompoment;
-import com.space.game.core.Entity;
+import com.space.game.entities.Entity;
 import com.space.game.entities.ShipEntity;
 import com.space.game.entities.TargetEntity;
 import com.space.game.systems.*;
 import com.space.gui.GameUi;
 
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-
 
 
 public class GameScreen implements Screen {
@@ -37,17 +34,17 @@ public class GameScreen implements Screen {
     private Observer debugObserver;
     private GameUi gameUi;
 
-    GameScreen(){
+    GameScreen() {
         //this.gameUi = new GameUi(Constants.WORLD_WIDTH,Constants.WORLD_HEIGHT);
 
         entity = new ShipEntity("ship");
         addGameObjectToScreen(this.entity);
         entity = new TargetEntity("Circle" + UUID.randomUUID());
-        entity.getComponent(GraphicsCompoment.class).setShape(GraphicsCompoment.Shapes.CIRCLE);
+        entity.getComponent(GraphicsCompoment.class).setShape(new Circle(0, 0, 0));
         addGameObjectToScreen(this.entity);
         collisionSystem = new CollisionSystem();
-        physicsSystem = new PhysicsSystem(gravityConstant,Constants.WORLD_WIDTH,Constants.WORLD_HEIGHT);
-        renderSystem = new RenderSystem(Constants.WORLD_WIDTH,Constants.WORLD_HEIGHT);
+        physicsSystem = new PhysicsSystem(gravityConstant, Constants.WORLD_WIDTH, Constants.WORLD_HEIGHT);
+        renderSystem = new RenderSystem(Constants.WORLD_WIDTH, Constants.WORLD_HEIGHT);
         movableSystem = new MovableSystem();
         debugObserver = new DebugObserver();
         scoringSystem = new ScoringSystem();
@@ -58,9 +55,9 @@ public class GameScreen implements Screen {
         start();
     }
 
-    public void start(){
-        if(!isRunning){
-            for(Entity entity : entityList){
+    public void start() {
+        if (!isRunning) {
+            for (Entity entity : entityList) {
                 entity.start();
             }
         }
@@ -69,22 +66,21 @@ public class GameScreen implements Screen {
     @Override
     public void render(float deltaTime) {
         this.isRunning = true;
-        for(Entity entity : this.entityList){
+        for (Entity entity : this.entityList) {
             entity.update(deltaTime);
         }
-        renderSystem.update(entityList,deltaTime);
-        physicsSystem.update(entityList,deltaTime);
-        movableSystem.update(entityList,deltaTime);
-        collisionSystem.update(entityList,deltaTime);
-        scoringSystem.update(entityList,deltaTime);
+        renderSystem.update(entityList, deltaTime);
+        physicsSystem.update(entityList, deltaTime);
+        movableSystem.update(entityList, deltaTime);
+        collisionSystem.update(entityList, deltaTime);
+        scoringSystem.update(entityList, deltaTime);
 
     }
 
-    public void addGameObjectToScreen(Entity entity){
-        if(!isRunning){
+    public void addGameObjectToScreen(Entity entity) {
+        if (!isRunning) {
             entityList.add(entity);
-        }
-        else{
+        } else {
             entityList.add(entity);
             entity.start();
         }
@@ -92,10 +88,10 @@ public class GameScreen implements Screen {
 
     @Override
     public void resize(int width, int height) {
-        renderSystem.getViewport().update(width,height,true);
+        renderSystem.getViewport().update(width, height, true);
         renderSystem.getBatch().setProjectionMatrix(renderSystem.getCamera().combined);
         renderSystem.getShapeRenderer().setProjectionMatrix(renderSystem.getCamera().combined);
-       // this.gameUi.setViewPort(renderSystem.getViewport());
+        // this.gameUi.setViewPort(renderSystem.getViewport());
     }
 
     @Override
@@ -118,6 +114,7 @@ public class GameScreen implements Screen {
         //font.dispose();
         renderSystem.dispose();
     }
+
     @Override
     public void show() {
 

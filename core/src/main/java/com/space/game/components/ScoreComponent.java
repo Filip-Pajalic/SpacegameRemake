@@ -1,8 +1,8 @@
 package com.space.game.components;
 
-import com.space.game.core.Component;
+import com.space.game.components.external.Component;
 
-public class ScoreComponent extends Component {
+public class ScoreComponent implements Component {
 
     int score = 0;
 
@@ -19,7 +19,12 @@ public class ScoreComponent extends Component {
         this.score = score;
     }
 
-    public void updateScore(int value){
+    public void updateScore(int value) {
         this.score += value;
+    }
+
+    @Override
+    public boolean isEnabled(final boolean enable) {
+        return true;
     }
 }

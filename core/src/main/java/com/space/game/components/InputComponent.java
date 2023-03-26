@@ -2,41 +2,43 @@ package com.space.game.components;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
-
+import com.space.game.components.external.Component;
 
 import java.util.HashMap;
 import java.util.Map;
 
-
-import com.space.game.core.Component;
-
-public class InputComponent extends Component {
+public class InputComponent implements Component {
 
     protected Map<Integer, Vector2> inputMap = new HashMap<>();
-    public Vector2 direction = new Vector2(0f,0f);
+    public Vector2 direction = new Vector2(0f, 0f);
 
     @Override
     public void update(float dt) {
-        Vector2 resultDirection = new Vector2(0.0f,0.0f);
-        for(Map.Entry<Integer, Vector2> input : inputMap.entrySet()){
+        Vector2 resultDirection = new Vector2(0.0f, 0.0f);
+        for (Map.Entry<Integer, Vector2> input : inputMap.entrySet()) {
             int key = input.getKey();
             Vector2 value = input.getValue();
-            if(Gdx.input.isKeyPressed(key)){
+            if (Gdx.input.isKeyPressed(key)) {
                 resultDirection.x += value.x;
                 resultDirection.y += value.y;
             }
         }
-        resultDirection.clamp(-1.0f,1.0f);
+        resultDirection.clamp(-1.0f, 1.0f);
         direction.x = resultDirection.x;
         direction.y = resultDirection.y;
     }
 
-    public void start(){
+    @Override
+    public boolean isEnabled(final boolean enable) {
+        return true;
+    }
+
+    public void start() {
 
     }
 
-    public void addInput(int key, Vector2 value){
-        inputMap.put(key,value);
+    public void addInput(int key, Vector2 value) {
+        inputMap.put(key, value);
     }
 
     public float getDirectionX() {
@@ -46,6 +48,7 @@ public class InputComponent extends Component {
     public float getDirectionY() {
         return this.direction.y;
     }
+
     public Vector2 getDirection() {
         return this.direction;
     }

@@ -1,13 +1,12 @@
 package com.space.game.components;
 
 import com.badlogic.gdx.math.Vector2;
+import com.space.game.components.external.Component;
 
-import com.space.game.core.Component;
+public class PositionComponent implements Component {
 
-public class PositionComponent extends Component {
-
-    private Vector2 position = new Vector2(0f,0f);
-    private Vector2 lastPosition = new Vector2(0f,0f);
+    private Vector2 position = new Vector2(0f, 0f);
+    private Vector2 lastPosition = new Vector2(0f, 0f);
 
 
     @Override
@@ -15,8 +14,13 @@ public class PositionComponent extends Component {
 
     }
 
-    public void start(){
+    public void start() {
 
+    }
+
+    @Override
+    public boolean isEnabled(final boolean enable) {
+        return true;
     }
 
     public Vector2 getPosition() {
@@ -27,19 +31,18 @@ public class PositionComponent extends Component {
         this.position = position;
     }
 
-    public void translate(float xChange, float yChange){
+    public void translate(float xChange, float yChange) {
         this.position.x = this.position.x + xChange;
         this.position.y = this.position.y + yChange;
     }
 
-    public void setLastPosition(Vector2 position){
+    public void setLastPosition(Vector2 position) {
         this.lastPosition = position;
     }
 
-    public Vector2 getLastPosition(){
+    public Vector2 getLastPosition() {
         return this.lastPosition;
     }
-
 
 
 }

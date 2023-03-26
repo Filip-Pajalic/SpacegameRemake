@@ -1,8 +1,6 @@
 package com.space.event.core;
 
-import java.util.List;
-
-import com.space.game.core.Entity;
+import com.space.game.entities.Entity;
 
 public interface Observer {
 

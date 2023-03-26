@@ -9,17 +9,18 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.space.Constants;
 import com.space.event.core.Observer;
 import com.space.game.components.*;
-import com.space.game.core.Entity;
-import com.space.game.core.GameSystem;
 import com.space.game.entities.BackgroundEntity;
+import com.space.game.entities.Entity;
 import com.space.gui.GameUi;
 
+import java.awt.*;
 import java.util.List;
 
 
@@ -115,7 +116,7 @@ public class RenderSystem extends GameSystem {
             CollisionComponent entityCollision = entity.getComponent(CollisionComponent.class);
             if (entityGraphics != null && entityPosition != null && entityGraphics.getShape() != null) {
                 switch (entityGraphics.getShape()) {
-                    case CIRCLE -> {
+                    case Circle ignored -> {
                         this.shapeRenderer.setColor(entityGraphics.getColor());
                         this.shapeRenderer.circle(entityPosition.getPosition().x, entityPosition.getPosition().y, entityGraphics.getSizeX());
                         if (entityGraphics.getFilledColor() != null) {
@@ -125,19 +126,28 @@ public class RenderSystem extends GameSystem {
                             this.shapeRenderer.set(ShapeRenderer.ShapeType.Line);
                         }
                     }
-                    case RECANGLE ->
+                    case Rectangle ignored ->
                         this.shapeRenderer.rect(entityPosition.getPosition().x, entityPosition.getPosition().y, entityGraphics.getSizeX(), entityGraphics.getSizeY());
+                    default -> {
+                    }
                 }
             }
             if (Constants.DEBUG && entityCollision != null && entityPosition != null) {
                 this.shapeRenderer.setColor(Color.RED);
-                if (entityCollision.getCircle() == null && entityCollision.getRect() != null) {
-                    this.shapeRenderer.rect(entityCollision.getPosition().x, entityCollision.getPosition().y, entityCollision.getRect().width, entityCollision.getRect().height);
-                } else if (entityCollision.getRect() == null && entityCollision.getCircle() != null) {
-                    this.shapeRenderer.circle(entityCollision.getPosition().x, entityCollision.getPosition().y, entityCollision.getCircle().radius);
+                if (entityCollision.getShape() == null) {
+                    switch (entityGraphics.getShape()) {
+                        case Circle ignore -> {
+                            final Circle circle = (Circle) entityGraphics.getShape();
+                            this.shapeRenderer.circle(entityCollision.getPosition().x, entityCollision.getPosition().y, circle.radius);
+                        }
+                        case Rectangle ignored -> {
+                            final Rectangle rectangle = (Rectangle) entityGraphics.getShape();
+                            this.shapeRenderer.rect(entityCollision.getPosition().x, entityCollision.getPosition().y, rectangle.width, rectangle.height);
+                        }
+                        default -> {
+                        }
+                    }
                 }
-
-
             }
         });
         this.shapeRenderer.end();
